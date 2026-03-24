@@ -17,7 +17,7 @@ void Logger::stop() {
 }
 
 void Logger::run() {
-    std::ofstream file("output.csv");
+    std::ofstream file("../data/output.csv");
 
     // ヘッダー
     file << "timestamp,x,y\n";
