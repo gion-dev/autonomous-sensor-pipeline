@@ -2,7 +2,8 @@
 #include <chrono>
 #include <random>
 
-Sensor::Sensor(SafeQueue<Position>& q) : queue(q) {}
+Sensor::Sensor(SafeQueue<Position>& q, int interval_ms, double noise)
+    : queue(q), interval(interval_ms), noise_stddev(noise) {}
 
 void Sensor::start() {
     sensorRunning = true;
@@ -22,7 +23,9 @@ void Sensor::run() {
 
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::normal_distribution<> noise(0.0, 0.5); // 平均0、分散0.5
+
+    // ノイズを作成、分散は設定値から
+    std::normal_distribution<> noise(0.0, noise_stddev);
 
     while (sensorRunning) {
         Position p;
@@ -38,6 +41,6 @@ void Sensor::run() {
         x += 1.0;
         y += 0.5;
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        std::this_thread::sleep_for(std::chrono::milliseconds(interval));
     }
 }

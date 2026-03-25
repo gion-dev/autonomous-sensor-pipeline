@@ -30,6 +30,8 @@ target_link_libraries(pipeline PUBLIC components)
 # main実行
 # ------------------------
 add_executable(main src/main.cpp)
+# main実行時に引数を指定したい場合は↓の例のように記載する
+# ./main --duration 7 --interval 300 --noise 0.2
 
 # mainはpipelineのみリンク（componentsはPUBLICでリンク済み）
 target_link_libraries(main pipeline)
@@ -50,8 +52,11 @@ add_custom_target(plot
 # main & Python 実行
 # ------------------------
 add_custom_target(run
-    COMMAND ${CMAKE_BINARY_DIR}/main
+    COMMAND ${CMAKE_BINARY_DIR}/main ${ARGS}
     COMMAND python3 scripts/analyze.py
     COMMAND python3 scripts/plot.py
+    #DEPENDS main
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
+# make runで引数を指定したい場合はcmakeの際に↓の例のように記載する
+# cmake .. -D ARGS="--duration;10;--interval;500;--noise;0.8"

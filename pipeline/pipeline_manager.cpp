@@ -1,7 +1,11 @@
 #include "pipeline_manager.h"
 
-PipelineManager::PipelineManager()
-    : sensor(q1), processor(q1, q2), logger(q2) {}
+PipelineManager::PipelineManager(const Config& config)
+    : sensor(q1, config.sensor_interval_ms, config.noise_stddev),
+      processor(q1, q2),
+      logger(q2),
+      config(config)
+{}
 
 void PipelineManager::start() {
     sensor.start();
