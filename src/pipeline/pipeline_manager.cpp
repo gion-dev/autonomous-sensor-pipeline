@@ -1,10 +1,10 @@
 #include "pipeline/pipeline_manager.h"
 
-PipelineManager::PipelineManager(const int interval_ms, const double noise, const double alpha)
+PipelineManager::PipelineManager(const int interval_ms, const double noise, const double alpha, const double ax, const double ay)
     : raw_queue(),
       proc_queue(),
       filtered_queue(),
-      sensor(raw_queue, proc_queue, interval_ms, noise),
+      sensor(raw_queue, proc_queue, interval_ms, noise, ax, ay),
       processor(proc_queue, filtered_queue, alpha),
       raw_logger(raw_queue),
       filtered_logger(filtered_queue)

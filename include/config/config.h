@@ -5,6 +5,8 @@ struct Config {
     int sensor_interval_ms = 500;
     double noise_stddev = 0.5;
     double alpha = 0.3;
+    double ax = 0.5;
+    double ay = 0.2;
 };
 
 Config parseArgs(int argc, char* argv[]);

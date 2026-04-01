@@ -66,7 +66,7 @@ target_link_libraries(main
 )
 
 # メモ：main実行時に引数を指定したい場合は↓の例のように記載する
-# ./main --duration 5 --interval 300 --noise 0.7 --alpha 0.3
+# ./main --duration 5 --interval 300 --noise 0.7 --alpha 0.3 --ax 0.5 --ay 0.2
 
 # ========================
 # Python utilities
@@ -92,5 +92,5 @@ add_custom_target(run
 )
 
 # メモ：make runで引数を指定したい場合はcmakeの際に↓の例のように記載する
-# cmake .. -D ARGS="--duration;5;--interval;300;--noise;0.7;--alpha;0.3"
+# cmake .. -D ARGS="--duration;5;--interval;300;--noise;0.7;--alpha;0.3;--ax;0.5;--ay;0.2"
 

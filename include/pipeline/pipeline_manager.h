@@ -6,13 +6,12 @@
 
 class PipelineManager {
 public:
-    PipelineManager(const int interval_ms, const double noise, const double alpha);
+    PipelineManager(const int interval_ms, const double noise, const double alpha, const double ax, const double ay);
 
     void start();
     void stop();
 
 private:
-    // TODO Queデータをshared_ptrにしてもいいかも
     SafeQueue<Position> raw_queue;
     SafeQueue<Position> proc_queue;
     SafeQueue<Position> filtered_queue;

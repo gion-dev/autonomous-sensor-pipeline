@@ -2,8 +2,8 @@
 #include <chrono>
 #include <random>
 
-Sensor::Sensor(SafeQueue<Position>& raw, SafeQueue<Position>& proc, int interval_ms, double noise)
-    : raw_queue(raw), proc_queue(proc), interval(interval_ms), noise_stddev(noise) {}
+Sensor::Sensor(SafeQueue<Position>& raw, SafeQueue<Position>& proc, int interval_ms, double noise, double ax, double ay)
+    : raw_queue(raw), proc_queue(proc), interval(interval_ms), noise_stddev(noise), acceleration_x(ax), acceleration_y(ay) {}
 
 void Sensor::start() {
     sensorRunning = true;
@@ -26,10 +26,6 @@ void Sensor::run() {
     double velocity_x = 0.0;
     double velocity_y = 0.0;
 
-    // 加速度（外部入力として設定）
-    double acceleration_x = 0.5;
-    double acceleration_y = 0.2;
-
     // 前回ループ時刻（dt計算用）
     auto prev_time = std::chrono::steady_clock::now();
 
@@ -46,12 +42,10 @@ void Sensor::run() {
         prev_time = now;
 
         // 加速度を時間積分して速度を更新
-        // （v = v + a * dt）
         velocity_x += acceleration_x * dt;
         velocity_y += acceleration_y * dt;
         
         // 速度を時間積分して位置を更新
-        // （x = x + v * dt）
         x += velocity_x * dt;
         y += velocity_y * dt;
 
