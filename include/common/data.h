@@ -3,5 +3,5 @@
 struct Position {
     double x;
     double y;
-    long timestamp;
+    int64_t timestamp;
 };

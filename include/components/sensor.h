@@ -6,7 +6,7 @@
 
 class Sensor {
 public:
-    Sensor(SafeQueue<Position>& raw, SafeQueue<Position>& proc, int interval_ms, double noise_stddev, double ax, double ay);
+    Sensor(SafeQueue<Position>& raw, SafeQueue<Position>& proc, SafeQueue<Position>& truth, int interval_ms, double noise_stddev, double ax, double ay);
 
     void start();
     void stop();
@@ -19,6 +19,7 @@ private:
     
     SafeQueue<Position>& raw_queue;
     SafeQueue<Position>& proc_queue;
+    SafeQueue<Position>& truth_queue;
 
     int interval;
     double noise_stddev;

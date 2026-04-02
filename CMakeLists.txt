@@ -17,6 +17,7 @@ add_library(components
     src/components/processor.cpp
     src/components/raw_logger.cpp
     src/components/filtered_logger.cpp
+    src/components/truth_logger.cpp
 )
 
 target_include_directories(components

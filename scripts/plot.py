@@ -1,42 +1,74 @@
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
-import argparse
 import os
+
+def calc_rmse(df, truth):
+    error = np.sqrt(
+        (df["x"] - truth["x"])**2 +
+        (df["y"] - truth["y"])**2
+    )
+    return np.sqrt(np.mean(error**2))
 
 def main():
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
     raw_path = os.path.join(BASE_DIR, "data/raw.csv")
     filtered_path = os.path.join(BASE_DIR, "data/filtered.csv")
+    truth_path = os.path.join(BASE_DIR, "data/truth.csv")
 
-    if not os.path.exists(raw_path):
-        print("raw.csv not found")
-        return
+    # =========================
+    # ファイルチェック
+    # =========================
+    for path, name in [
+        (raw_path, "raw.csv"),
+        (filtered_path, "filtered.csv"),
+        (truth_path, "truth.csv")
+    ]:
+        if not os.path.exists(path):
+            print(f"{name} not found")
+            return
 
-    if not os.path.exists(filtered_path):
-        print("filtered.csv not found")
-        return
+    # =========================
+    # 読み込み & ソート
+    # =========================
+    df_raw = pd.read_csv(raw_path).sort_values("timestamp").reset_index(drop=True)
+    df_filtered = pd.read_csv(filtered_path).sort_values("timestamp").reset_index(drop=True)
+    df_truth = pd.read_csv(truth_path).sort_values("timestamp").reset_index(drop=True)
 
-    df_raw = pd.read_csv(raw_path)
-    df_raw = df_raw.sort_values("timestamp").reset_index(drop=True)
-    df_filtered = pd.read_csv(filtered_path)
-    df_filtered = df_filtered.sort_values("timestamp").reset_index(drop=True)
+    # 長さ揃え
+    min_len = min(len(df_raw), len(df_filtered), len(df_truth))
+    df_raw = df_raw.iloc[:min_len]
+    df_filtered = df_filtered.iloc[:min_len]
+    df_truth = df_truth.iloc[:min_len]
 
-    t0 = df_raw["timestamp"].iloc[0]
-    time_raw = (df_raw["timestamp"] - t0) / 1e9
-    time_filtered = (df_filtered["timestamp"] - t0) / 1e9
+    # =========================
+    # 時間（相対秒）
+    # =========================
+    t0 = df_truth["timestamp"].iloc[0]
+    time = (df_truth["timestamp"] - t0) / 1e9
 
-    # === 比較 ===
+    # =========================
+    # RMSE計算
+    # =========================
+    rmse_raw = calc_rmse(df_raw, df_truth)
+    rmse_filtered = calc_rmse(df_filtered, df_truth)
+    improve_rate = (rmse_raw - rmse_filtered) / rmse_raw * 100
+
+    # =========================
+    # グラフ①：位置比較（x）
+    # =========================
     plt.figure(figsize=(8, 4))
 
-    plt.plot(time_raw, df_raw["x"], label="raw_x", alpha=0.5)   # メモ：ここのalphaは見た目の透明度の指定なので処理には関係なし
-    plt.plot(time_filtered, df_filtered["x"], label="filtered_x")
+    plt.plot(time, df_truth["x"], label="truth", linewidth=2)
+    plt.plot(time, df_raw["x"], label="raw", linestyle="--", alpha=0.8) # メモ：ここのalphaは見た目の透明度
+    plt.plot(time, df_filtered["x"], label="filtered", linewidth=2)
 
-    plt.xlabel("time (relative)")
-    plt.ylabel("x")
-    plt.title("Raw vs Filtered")
+    plt.xlabel("time (s)")
+    plt.ylabel("position x")
+    plt.title(f"Position Comparison (RMSE improved {improve_rate:.1f}%)")
     plt.legend()
-    plt.title("Raw vs Filtered")
+    plt.grid()
     plt.tight_layout()
 
     output_plot = os.path.join(BASE_DIR, "data/plot.png")
@@ -44,18 +76,29 @@ def main():
 
     print(f"plot saved to {output_plot}")
 
-    # === 差分 ===
+    # =========================
+    # グラフ②：誤差（truthとの差）
+    # =========================
+    raw_error = np.sqrt(
+        (df_raw["x"] - df_truth["x"])**2 +
+        (df_raw["y"] - df_truth["y"])**2
+    )
+
+    filtered_error = np.sqrt(
+        (df_filtered["x"] - df_truth["x"])**2 +
+        (df_filtered["y"] - df_truth["y"])**2
+    )
+
     plt.figure(figsize=(8, 4))
 
-    diff = (df_raw["x"] - df_filtered["x"]).abs()
+    plt.plot(time, raw_error, label="raw error", linestyle="--", alpha=0.8)
+    plt.plot(time, filtered_error, label="filtered error")
 
-    plt.plot(time_raw, diff, label="difference")
-
-    plt.xlabel("time (relative)")
-    plt.ylabel("difference")
-    plt.title("Difference")
+    plt.xlabel("time (s)")
+    plt.ylabel("error (distance)")
+    plt.title(f"Error Comparison (RMSE raw={rmse_raw:.2f}, filtered={rmse_filtered:.2f})")
     plt.legend()
-    plt.title("Difference")
+    plt.grid()
     plt.tight_layout()
 
     output_diff = os.path.join(BASE_DIR, "data/diff.png")

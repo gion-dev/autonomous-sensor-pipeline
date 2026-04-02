@@ -3,6 +3,7 @@
 #include "components/processor.h"
 #include "components/raw_logger.h"
 #include "components/filtered_logger.h"
+#include "components/truth_logger.h"
 
 class PipelineManager {
 public:
@@ -15,9 +16,11 @@ private:
     SafeQueue<Position> raw_queue;
     SafeQueue<Position> proc_queue;
     SafeQueue<Position> filtered_queue;
+    SafeQueue<Position> truth_queue;
 
     Sensor sensor;
     Processor processor;
     RawLogger raw_logger;
     FilteredLogger filtered_logger;
+    TruthLogger truth_logger;
 };

@@ -4,10 +4,12 @@ PipelineManager::PipelineManager(const int interval_ms, const double noise, cons
     : raw_queue(),
       proc_queue(),
       filtered_queue(),
-      sensor(raw_queue, proc_queue, interval_ms, noise, ax, ay),
+      truth_queue(),
+      sensor(raw_queue, proc_queue, truth_queue, interval_ms, noise, ax, ay),
       processor(proc_queue, filtered_queue, alpha),
       raw_logger(raw_queue),
-      filtered_logger(filtered_queue)
+      filtered_logger(filtered_queue),
+      truth_logger(truth_queue)
 {}
 
 void PipelineManager::start() {
@@ -15,6 +17,7 @@ void PipelineManager::start() {
     processor.start();
     raw_logger.start();
     filtered_logger.start();
+    truth_logger.start();
 }
 
 void PipelineManager::stop() {
@@ -22,4 +25,5 @@ void PipelineManager::stop() {
     processor.stop();
     raw_logger.stop();
     filtered_logger.stop();
+    truth_logger.stop();
 }
