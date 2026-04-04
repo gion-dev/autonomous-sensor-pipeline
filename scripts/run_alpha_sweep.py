@@ -5,7 +5,7 @@ import shutil
 alphas = [0.1, 0.3, 0.5, 0.7]
 
 for alpha in alphas:
-    print(f"Running alpha={alpha}")
+    print(f"alpha={alpha}")
 
     subprocess.run([
         "./build/main",

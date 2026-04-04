@@ -1,36 +1,25 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
-import glob
 import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-data_dir = os.path.join(BASE_DIR, "data")
+data_path = os.path.join(BASE_DIR, "data/alpha_sweep_avg.csv")
 
 # =========================
 # CSV読み込み
 # =========================
-files = sorted(glob.glob(os.path.join(data_dir, "analysis_alpha_*.csv")))
-
-if not files:
-    print("analysis_alpha_*.csv not found")
+if not os.path.exists(data_path):
+    print("alpha_sweep_avg.csv not found")
     exit()
 
-alphas = []
-rmses = []
-pairs = []
-
-for f in files:
-    df = pd.read_csv(f)
-    alpha = float(os.path.basename(f).split("_")[-1].replace(".csv", ""))
-    rmse = df["rmse_filtered"].iloc[0]
-    pairs.append((alpha, rmse))
+df = pd.read_csv(data_path)
 
 # alpha順にソート
-pairs.sort()
+df = df.sort_values("alpha").reset_index(drop=True)
 
-alphas = [p[0] for p in pairs]
-rmses = [p[1] for p in pairs]
+alphas = df["alpha"].tolist()
+rmses = df["avg_rmse"].tolist()
 
 # =========================
 # 最適alpha
@@ -63,14 +52,14 @@ plt.scatter(other_alphas, other_rmses, label="others")
 plt.scatter(best_alpha, best_rmse, s=150, label="best", zorder=3)
 
 plt.xlabel("alpha")
-plt.ylabel("RMSE")
-plt.title(f"Alpha vs RMSE (best={best_alpha})")
+plt.ylabel("Average RMSE")
+plt.title(f"Alpha vs Average RMSE (best={best_alpha})")
 plt.legend()
 plt.grid()
 plt.tight_layout()
 
 # 保存
-output = os.path.join(data_dir, "alpha_vs_rmse.png")
+output = os.path.join(BASE_DIR, "data/alpha_vs_avg_rmse.png")
 plt.savefig(output)
 plt.close()
 

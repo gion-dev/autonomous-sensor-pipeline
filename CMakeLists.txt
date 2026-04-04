@@ -88,6 +88,13 @@ add_custom_target(py_alpha_sweep
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
+add_custom_target(py_alpha_sweep_ave
+    COMMAND python3 ${CMAKE_SOURCE_DIR}/scripts/run_alpha_sweep_avg.py
+    COMMAND python3 ${CMAKE_SOURCE_DIR}/scripts/plot_alpha_sweep_avg.py
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
+
+
 # ========================
 # Run pipeline + analysis
 # ========================
