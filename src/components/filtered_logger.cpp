@@ -17,7 +17,7 @@ void FilteredLogger::stop() {
 }
 
 void FilteredLogger::run() {
-    std::ofstream file("../data/filtered.csv");
+    std::ofstream file("data/filtered.csv");
     file << "timestamp,x,y\n";  // ヘッダー
 
     while (true) {

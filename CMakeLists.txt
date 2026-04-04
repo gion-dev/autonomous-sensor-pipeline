@@ -72,13 +72,19 @@ target_link_libraries(main
 # ========================
 # Python utilities
 # ========================
-add_custom_target(analyze
+add_custom_target(py_analyze
     COMMAND python3 ${CMAKE_SOURCE_DIR}/scripts/analyze.py
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
-add_custom_target(plot
+add_custom_target(py_plot
     COMMAND python3 ${CMAKE_SOURCE_DIR}/scripts/plot.py
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
+
+add_custom_target(py_alpha_sweep
+    COMMAND python3 ${CMAKE_SOURCE_DIR}/scripts/run_alpha_sweep.py
+    COMMAND python3 ${CMAKE_SOURCE_DIR}/scripts/plot_alpha_sweep.py
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
@@ -89,7 +95,7 @@ add_custom_target(run
     COMMAND main ${ARGS}
     COMMAND python3 ${CMAKE_SOURCE_DIR}/scripts/analyze.py
     COMMAND python3 ${CMAKE_SOURCE_DIR}/scripts/plot.py
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
 # メモ：make runで引数を指定したい場合はcmakeの際に↓の例のように記載する

@@ -19,4 +19,7 @@ private:
     SafeQueue<Position>& input;
     SafeQueue<Position>& output;
     double alpha;
+
+    bool is_first;
+    Position prev;
 };

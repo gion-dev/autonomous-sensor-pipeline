@@ -1,7 +1,7 @@
 #include "components/processor.h"
 
 Processor::Processor(SafeQueue<Position>& in, SafeQueue<Position>& out, const double alpha)
-    : input(in), output(out), alpha(alpha) {}
+    : input(in), output(out), alpha(alpha), is_first(true) {}
 
 void Processor::start() {
     worker = std::thread(&Processor::run, this);
@@ -14,9 +14,6 @@ void Processor::stop() {
         worker.join();
     }
 }
-
-bool is_first = true;
-Position prev;
 
 void Processor::run() {
     while (true) {

@@ -13,7 +13,7 @@ void TruthLogger::stop() {
 }
 
 void TruthLogger::run() {
-    std::ofstream file("../data/truth.csv");
+    std::ofstream file("data/truth.csv");
     file << "timestamp,x,y\n";  // ヘッダー
 
     while (true) {

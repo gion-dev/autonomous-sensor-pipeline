@@ -13,7 +13,7 @@ void RawLogger::stop() {
 }
 
 void RawLogger::run() {
-    std::ofstream file("../data/raw.csv");
+    std::ofstream file("data/raw.csv");
     file << "timestamp,x,y\n";  // ヘッダー
 
     while (true) {
