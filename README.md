@@ -100,9 +100,9 @@ RMSE = sqrt(mean((pred - truth)^2))
 
 ```
 === RMSE Evaluation ===
-Raw        : 0.89
-Filtered   : 0.44
-Improvement: 50.7%
+Raw        : 0.489
+Filtered   : 0.233
+Improvement: 52.2%
 ```
 
 👉 EMAにより約50%の精度改善を確認

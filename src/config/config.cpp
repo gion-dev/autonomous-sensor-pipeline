@@ -50,6 +50,9 @@ void validateConfig(const Config& config) {
     if (config.sensor_interval_ms <= 0) {
         throw std::runtime_error("interval must be > 0");
     }
+    if (config.noise_stddev > 5.0) {
+    std::cout << "[WARN] noise is large, result may be unstable" << std::endl;
+    }
     if (config.alpha < 0.0 || config.alpha > 1.0) {
         throw std::runtime_error("alpha must be in [0, 1]");
     }

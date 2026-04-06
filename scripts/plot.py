@@ -60,9 +60,9 @@ def main():
     # =========================
     plt.figure(figsize=(8, 4))
 
-    plt.plot(time, df_truth["x"], label="truth", linewidth=2)
-    plt.plot(time, df_raw["x"], label="raw", linestyle="--", alpha=0.8) # メモ：ここのalphaは見た目の透明度
-    plt.plot(time, df_filtered["x"], label="filtered", linewidth=2)
+    plt.plot(time, df_truth["x"], label="truth")
+    plt.plot(time, df_raw["x"], label="raw", linestyle="--", alpha=0.8)
+    plt.plot(time, df_filtered["x"], label="filtered")
 
     plt.xlabel("time (s)")
     plt.ylabel("position x")
